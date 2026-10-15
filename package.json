@@ -34,7 +34,7 @@
     "@angular/compiler-cli": "^19.2.0",
     "@angular/core": "^19.2.0",
     "@angular/forms": "^19.2.0",
-    "@angular/language-service": "^19.2.0",
+    "@angular/language-service": "^22.2.2",
     "@angular/material": "^19.2.0",
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
