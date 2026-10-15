@@ -1,0 +1,59 @@
+<header class="nav" [class.is-scrolled]="scrolled()" [class.menu-open]="mobileMenuOpen()">
+  <div class="nav-inner container">
+    <a routerLink="/" class="brand" (click)="closeMobileMenu()" aria-label="Tamil Nadu AVGC-XR Portal home">
+      <span class="brand-mark"><img src="assets/brand/tn-emblem.png" alt="Government of Tamil Nadu" width="32" height="32" /></span>
+      <span class="brand-word">
+        <span class="brand-title">AVGC<span class="dot">·</span>XR</span>
+        <span class="brand-sub">{{ lang() === 'ta' ? 'ELCOT முன்முயற்சி' : 'An ELCOT Initiative' }}</span>
+      </span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      @for (link of navLinks; track link.route) {
+        <a [routerLink]="link.route" routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: !!link.exact }" class="nav-link">
+          <span>{{ t(link.labelKey) }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="nav-actions">
+      <button type="button" class="nav-ai" (click)="openAi()"
+              [attr.aria-label]="lang() === 'ta' ? 'AI முறையைத் திற' : 'Open AI Mode'"
+              aria-keyshortcuts="Control+K Meta+K">
+        <span class="nav-ai-orb" aria-hidden="true"></span>
+        <span class="nav-ai-label">{{ lang() === 'ta' ? 'AI முறை' : 'AI Mode' }}</span>
+        <kbd aria-hidden="true">⌘K</kbd>
+      </button>
+      <button type="button" class="lang-btn" (click)="toggleLanguage()" [attr.aria-label]="t('a11y.toggleLang')">
+        {{ lang() === 'en' ? 'த' : 'EN' }}
+      </button>
+      <a routerLink="/auth/login" class="nav-signin">{{ t('common.login') }}</a>
+      <a routerLink="/auth/register" class="btn btn-primary nav-cta">{{ t('common.register') }}</a>
+      <button type="button" class="burger" [class.open]="mobileMenuOpen()" (click)="toggleMobileMenu()"
+              [attr.aria-label]="mobileMenuOpen() ? t('a11y.closeMenu') : t('a11y.openMenu')"
+              [attr.aria-expanded]="mobileMenuOpen()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-sheet" [class.open]="mobileMenuOpen()">
+    <nav class="mobile-links" aria-label="Mobile">
+      @for (link of navLinks; track link.route) {
+        <a [routerLink]="link.route" routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: !!link.exact }" class="mobile-link" (click)="closeMobileMenu()">
+          {{ t(link.labelKey) }}
+        </a>
+      }
+    </nav>
+    <button type="button" class="mobile-ai" (click)="openAi()">
+      <span class="nav-ai-orb" aria-hidden="true"></span>
+      {{ lang() === 'ta' ? 'AI முறையிடம் கேள்' : 'Ask with AI Mode' }}
+    </button>
+    <div class="mobile-cta">
+      <a routerLink="/auth/login" class="btn btn-ghost" (click)="closeMobileMenu()">{{ t('common.login') }}</a>
+      <a routerLink="/auth/register" class="btn btn-primary" (click)="closeMobileMenu()">{{ t('common.register') }}</a>
+    </div>
+  </div>
+</header>

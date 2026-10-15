@@ -1,0 +1,262 @@
+<!-- ============================================================ -->
+<!-- HOME — Tamil Nadu AVGC-XR Portal (ELCOT) -->
+<!-- ============================================================ -->
+
+<!-- HERO -->
+<section class="hero">
+  @defer (on idle) {
+    <app-aurora-hero class="hero-canvas-layer" [density]="1" [appParallax]="160"></app-aurora-hero>
+  } @placeholder {
+    <div class="hero-canvas-layer" aria-hidden="true"></div>
+  }
+  <div class="hero-vignette" aria-hidden="true"></div>
+
+  <div class="container hero-content" aria-labelledby="hero-heading">
+    <h1 class="hero-title" id="hero-heading">
+      <span class="hero-line-static">{{ isTa() ? 'தமிழ்நாட்டின் அதிகாரப்பூர்வ நுழைவாயில்' : "Tamil Nadu's official gateway to" }}</span>
+      <span class="hero-line-typed text-gradient" aria-hidden="true">
+        <app-typewriter [phrases]="typedPhrases" [typeSpeed]="62" [backSpeed]="30" [holdTime]="1700"></app-typewriter>
+      </span>
+      <span class="sr-only">Animation, VFX, Gaming, Comics and Extended Reality</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      {{ isTa()
+        ? 'ELCOT, தமிழ்நாடு அரசின் அதிகாரப்பூர்வ AVGC-XR இணையதளம் — அரசு ஊக்கத்திட்டங்களைக் கண்டறியுங்கள், ஆன்லைனில் விண்ணப்பியுங்கள், ஸ்டுடியோக்கள், திறமையாளர்கள் மற்றும் ஃப்ரீலான்ஸர்களுடன் இணையுங்கள்.'
+        : 'The official ELCOT portal of the Government of Tamil Nadu for Animation, VFX, Gaming, Comics & Extended Reality — discover incentive schemes, apply online, and connect with studios, talent and freelancers.' }}
+    </p>
+
+    <div class="hero-actions">
+      <a routerLink="/schemes" class="btn btn-hero-primary">
+        <mat-icon aria-hidden="true">explore</mat-icon>
+        {{ isTa() ? 'திட்டங்களை ஆராயுங்கள்' : 'Explore Schemes' }}
+      </a>
+      <a routerLink="/auth/register" class="btn btn-hero-ghost">
+        {{ isTa() ? 'விண்ணப்பிக்க பதிவு செய்க' : 'Register to Apply' }}
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+      </a>
+    </div>
+
+    <dl class="hero-stats">
+      @for (st of heroStats(); track st.label) {
+        <div class="hero-stat">
+          <dt class="hero-stat-label">{{ st.label }}</dt>
+          <dd class="hero-stat-value"
+              [appCountUp]="st.value"
+              [countUpPad]="st.pad"
+              [countUpPrefix]="st.prefix"
+              [countUpSuffix]="st.suffix"
+              [countUpDuration]="1400"></dd>
+        </div>
+      }
+    </dl>
+  </div>
+</section>
+
+<!-- VFX MARQUEE BAND -->
+<section class="vfx-marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="mq-item">Animation</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Visual&nbsp;Effects</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Gaming</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Comics</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Extended&nbsp;Reality</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Animation</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Visual&nbsp;Effects</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Gaming</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Comics</span><span class="mq-dot">✦</span>
+    <span class="mq-item">Extended&nbsp;Reality</span><span class="mq-dot">✦</span>
+  </div>
+</section>
+
+<!-- SCHEME FINDER (interactive centerpiece) -->
+<section class="section finder-section" id="scheme-finder">
+  <div class="container" appReveal="up">
+    <app-scheme-finder></app-scheme-finder>
+  </div>
+</section>
+
+<!-- SECTOR EXPLORER -->
+<section class="section sectors-section">
+  <div class="container">
+    <div class="section-header" appReveal="up">
+      <span class="section-kicker">{{ isTa() ? 'ஐந்து துறைகள்' : 'Five verticals' }}</span>
+      <h2 class="section-title">{{ isTa() ? 'AVGC-XR சுற்றுச்சூழல் அமைப்பு' : 'The AVGC-XR ecosystem' }}</h2>
+      <p class="section-subtitle">
+        {{ isTa()
+          ? 'ஒரே கொள்கையின் கீழ் ஐந்து படைப்பாற்றல் துறைகள் — ஒவ்வொன்றும் தனித்துவமான ஆதரவுடன்.'
+          : 'Five creative-tech verticals under one policy — each with dedicated support.' }}
+      </p>
+    </div>
+
+    <div class="sectors-grid">
+      @for (sec of sectorCards(); track sec.key; let i = $index) {
+        <article class="sector-card" [appReveal]="'scale'" [revealDelay]="i * 70"
+                 [style.--sector]="sec.color" tabindex="0">
+          <div class="sector-icon"><mat-icon aria-hidden="true">{{ sec.icon }}</mat-icon></div>
+          <h3 class="sector-name">{{ sec.label }}</h3>
+          <p class="sector-blurb">{{ sec.blurb }}</p>
+          <span class="sector-bar" aria-hidden="true"></span>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED SCHEMES -->
+<section class="section schemes-section">
+  <div class="container">
+    <div class="section-header" appReveal="up">
+      <span class="section-kicker">{{ isTa() ? 'ஊக்கத்திட்டங்கள்' : 'Incentives' }}</span>
+      <h2 class="section-title">{{ t('home.schemes.title') }}</h2>
+      <p class="section-subtitle">{{ t('home.schemes.subtitle') }}</p>
+    </div>
+
+    <div class="schemes-grid">
+      @for (s of featuredSchemes(); track s.id; let i = $index) {
+        <article class="scheme-card" [appReveal]="i % 2 === 0 ? 'left' : 'right'" [revealDelay]="(i % 3) * 60">
+          <div class="scheme-card-top">
+            <div class="scheme-icon"><mat-icon aria-hidden="true">{{ s.icon }}</mat-icon></div>
+            <span class="scheme-category">{{ categoryLabel(s) }}</span>
+          </div>
+
+          <h3 class="scheme-name">{{ schemeName(s) }}</h3>
+          <p class="scheme-description">{{ schemeDescription(s) }}</p>
+
+          <div class="scheme-foot">
+            <div class="scheme-amount">
+              <span class="scheme-amount-label">{{ t('schemes.card.maxAmount') }}</span>
+              <span class="scheme-amount-value">{{ formatAmount(s.maxAmount) }}</span>
+            </div>
+            <div class="scheme-time">
+              <mat-icon aria-hidden="true">schedule</mat-icon>
+              {{ processingTime(s) }}
+            </div>
+          </div>
+
+          <a [routerLink]="['/schemes', s.slug]" class="scheme-cta">
+            {{ t('schemes.card.viewDetails') }}
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </a>
+        </article>
+      }
+    </div>
+
+    <div class="section-footer" appReveal="fade">
+      <a routerLink="/schemes" class="btn btn-outline btn-lg">
+        {{ t('home.schemes.viewAll') }}
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION JOURNEY -->
+<section class="section journey-section">
+  <div class="container">
+    <div class="section-header" appReveal="up">
+      <span class="section-kicker">{{ isTa() ? 'செயல்முறை' : 'How it works' }}</span>
+      <h2 class="section-title">{{ isTa() ? 'விண்ணப்பத்திலிருந்து வழங்கல் வரை' : 'From application to disbursal' }}</h2>
+      <p class="section-subtitle">
+        {{ isTa() ? 'ஐந்து தெளிவான படிகள் — முழுவதும் ஆன்லைனில்.' : 'Five clear steps — fully online.' }}
+      </p>
+    </div>
+
+    <ol class="journey">
+      @for (step of journey(); track step.index; let i = $index) {
+        <li class="journey-step" [appReveal]="'up'" [revealDelay]="i * 90">
+          <div class="journey-marker">
+            <span class="journey-num">{{ step.index }}</span>
+            <mat-icon aria-hidden="true">{{ step.icon }}</mat-icon>
+          </div>
+          <h3 class="journey-label">{{ step.label }}</h3>
+          <p class="journey-desc">{{ step.desc }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<!-- NEWS & UPDATES -->
+<section class="section news-section">
+  <div class="container">
+    <div class="section-header" appReveal="up">
+      <span class="section-kicker">{{ isTa() ? 'புதுப்பிப்புகள்' : 'Newsroom' }}</span>
+      <h2 class="section-title">{{ t('home.news.title') }}</h2>
+      <p class="section-subtitle">{{ t('home.news.subtitle') }}</p>
+    </div>
+
+    <div class="news-grid">
+      @for (n of news(); track n.id; let i = $index) {
+        <article class="news-card" [appReveal]="'up'" [revealDelay]="i * 80">
+          <div class="news-icon"><mat-icon aria-hidden="true">{{ n.icon }}</mat-icon></div>
+          <div class="news-meta">{{ formatDate(n.date) }}</div>
+          <h3 class="news-title">{{ newsTitle(n) }}</h3>
+          <p class="news-excerpt">{{ newsExcerpt(n) }}</p>
+        </article>
+      }
+    </div>
+
+    <div class="section-footer" appReveal="fade">
+      <a routerLink="/events" class="btn btn-outline btn-lg">
+        {{ t('home.news.viewAll') }}
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM CONNECT -->
+<section class="section ecosystem-section">
+  <div class="container">
+    <div class="section-header" appReveal="up">
+      <span class="section-kicker">{{ isTa() ? 'இணையுங்கள்' : 'Connect' }}</span>
+      <h2 class="section-title">{{ t('home.ecosystem.title') }}</h2>
+      <p class="section-subtitle">{{ t('home.ecosystem.subtitle') }}</p>
+    </div>
+
+    <div class="ecosystem-grid">
+      <a routerLink="/companies" class="ecosystem-card" [appReveal]="'up'" [revealDelay]="0">
+        <div class="ecosystem-icon"><mat-icon aria-hidden="true">business_center</mat-icon></div>
+        <h3 class="ecosystem-title">{{ isTa() ? 'வணிக இணைப்பு' : 'Business Connect' }}</h3>
+        <p class="ecosystem-description">
+          {{ isTa() ? 'தமிழ்நாடு முழுவதும் உள்ள AVGC-XR நிறுவனங்கள் மற்றும் ஸ்டுடியோக்களின் அடைவு.' : 'A searchable directory of AVGC-XR companies, studios and service providers across Tamil Nadu.' }}
+        </p>
+        <span class="ecosystem-cta">{{ isTa() ? 'நிறுவனங்களை உலாவு' : 'Browse companies' }}<mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+      </a>
+
+      <a routerLink="/talent" class="ecosystem-card" [appReveal]="'up'" [revealDelay]="80">
+        <div class="ecosystem-icon"><mat-icon aria-hidden="true">school</mat-icon></div>
+        <h3 class="ecosystem-title">{{ isTa() ? 'திறமை இணைப்பு' : 'Talent Connect' }}</h3>
+        <p class="ecosystem-description">
+          {{ isTa() ? 'மாணவர்கள் மற்றும் நிபுணர்களுக்கான திறன் பதிவேடு — வேலை, இன்டர்ன்ஷிப் வாய்ப்புகள்.' : 'A digital skill registry for students and professionals — jobs, internships and careers.' }}
+        </p>
+        <span class="ecosystem-cta">{{ isTa() ? 'திறமையாளர்களைக் காண்க' : 'Explore talent' }}<mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+      </a>
+
+      <a routerLink="/freelancers" class="ecosystem-card" [appReveal]="'up'" [revealDelay]="160">
+        <div class="ecosystem-icon"><mat-icon aria-hidden="true">badge</mat-icon></div>
+        <h3 class="ecosystem-title">{{ isTa() ? 'ஃப்ரீலான்ஸர் பதிவேடு' : 'Freelancer Registry' }}</h3>
+        <p class="ecosystem-description">
+          {{ isTa() ? 'சரிபார்க்கப்பட்ட ஃப்ரீலான்ஸர்களின் சுயவிவர அடிப்படையிலான கண்டுபிடிப்பு.' : 'Profile-based discoverability of verified freelancers by companies and stakeholders.' }}
+        </p>
+        <span class="ecosystem-cta">{{ isTa() ? 'ஃப்ரீலான்ஸர்களைக் காண்க' : 'Find freelancers' }}<mat-icon aria-hidden="true">arrow_forward</mat-icon></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container cta-inner" appReveal="scale">
+    <h2 class="cta-title">{{ t('home.cta.title') }}</h2>
+    <p class="cta-subtitle">{{ t('home.cta.subtitle') }}</p>
+    <div class="cta-actions">
+      <a routerLink="/auth/register" class="btn btn-hero-primary btn-lg">
+        {{ t('home.cta.register') }}
+        <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+      </a>
+      <a routerLink="/schemes" class="btn btn-outline-light btn-lg">{{ t('home.cta.browse') }}</a>
+    </div>
+  </div>
+</section>

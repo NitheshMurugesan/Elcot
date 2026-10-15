@@ -1,0 +1,25 @@
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    port: 5672
+    username: ${RABBITMQ_USER}
+    # render.yaml provides RABBITMQ_PASSWORD (matches the API + broker); the old
+    # ${RABBITMQ_PASS} was unset and fell back to a wrong default -> ACCESS_REFUSED.
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        prefetch: 50
+        concurrency: 10
+  mail:
+    # Email is optional; default so the worker doesn't crash when SMTP_* is unset
+    # (Could not resolve placeholder 'SMTP_HOST' aborted Spring's mail auto-config).
+    host: ${SMTP_HOST:smtp.gmail.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USER:}
+    password: ${SMTP_PASS:}
+elasticsearch:
+  uris: ${ES_URIS}
+logging:
+  level:
+    root: WARN
+    in.elcot.avgcxr: INFO

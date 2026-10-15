@@ -1,0 +1,157 @@
+<section class="schemes-page">
+  <app-page-header
+    [icon]="'workspace_premium'"
+    [title]="t('schemes.title')"
+    [subtitle]="t('schemes.subtitle')"
+    [breadcrumb]="crumbs()"
+    [homeLabel]="isTa() ? 'முகப்பு' : 'Home'">
+  </app-page-header>
+
+  <div class="container schemes-layout">
+    <!-- Filters sidebar -->
+    <aside class="filters-sidebar" aria-label="Filters">
+      <div class="filters-header">
+        <h2 class="filters-title">
+          <mat-icon>tune</mat-icon>
+          {{ t('schemes.filters.title') }}
+        </h2>
+        @if (hasActiveFilters()) {
+          <button type="button" class="reset-btn" (click)="resetFilters()">
+            {{ t('schemes.filters.reset') }}
+          </button>
+        }
+      </div>
+
+      <form [formGroup]="filterForm" class="filters-form">
+        <!-- Search -->
+        <div class="filter-group">
+          <label class="filter-label">{{ t('common.search') }}</label>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="text" [formControl]="searchControl" placeholder="...">
+          </mat-form-field>
+        </div>
+
+        <!-- Category -->
+        <div class="filter-group">
+          <label class="filter-label">{{ t('schemes.filters.category') }}</label>
+          <div class="category-grid">
+            <button
+              type="button"
+              class="category-chip"
+              [class.active]="!selectedCategory()"
+              (click)="categoryControl.setValue('')"
+            >
+              {{ t('schemes.filters.allCategories') }}
+            </button>
+            @for (cat of categories; track cat.value) {
+              <button
+                type="button"
+                class="category-chip"
+                [class.active]="selectedCategory() === cat.value"
+                (click)="categoryControl.setValue(cat.value)"
+              >
+                <mat-icon>{{ cat.icon }}</mat-icon>
+                {{ t('schemes.categories.' + cat.value) }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="filter-group">
+          <label class="filter-label">{{ t('schemes.filters.status') }}</label>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-select [formControl]="statusControl" placeholder="{{ t('schemes.filters.allStatus') }}">
+              <mat-option [value]="">{{ t('schemes.filters.allStatus') }}</mat-option>
+              @for (s of statuses; track s.value) {
+                <mat-option [value]="s.value">
+                  {{ lang() === 'ta' ? s.labelTa : s.labelEn }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Department -->
+        @if (departments.length > 0) {
+          <div class="filter-group">
+            <label class="filter-label">{{ t('schemes.filters.department') }}</label>
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-select [formControl]="departmentControl" placeholder="{{ t('schemes.filters.allDepartments') }}">
+                <mat-option [value]="">{{ t('schemes.filters.allDepartments') }}</mat-option>
+                @for (d of departments; track d) {
+                  <mat-option [value]="d">{{ d }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        }
+      </form>
+    </aside>
+
+    <!-- Schemes list -->
+    <div class="schemes-content">
+      <div class="results-header">
+        <span class="results-count">
+          {{ filteredSchemes().length }} {{ t('schemes.title') }}
+        </span>
+      </div>
+
+      @if (filteredSchemes().length === 0) {
+        <app-state-message
+          variant="empty"
+          [title]="t('schemes.empty.title')"
+          [description]="t('schemes.empty.description')"
+          [actionLabel]="t('schemes.empty.action')"
+          (action)="resetFilters()"
+        />
+      } @else {
+        <div class="schemes-grid">
+          @for (s of filteredSchemes(); track s.id) {
+            <article class="scheme-card">
+              <div class="scheme-card-header">
+                <div class="scheme-icon">
+                  <mat-icon>{{ s.icon }}</mat-icon>
+                </div>
+                <span class="scheme-category">{{ getCategoryLabel(s) }}</span>
+              </div>
+
+              <h3 class="scheme-name">{{ getName(s) }}</h3>
+              <p class="scheme-description">{{ getDescription(s) }}</p>
+
+              <div class="scheme-dept">
+                <mat-icon>account_balance</mat-icon>
+                <span>{{ getDepartment(s) }}</span>
+              </div>
+
+              <div class="scheme-stats">
+                <div class="scheme-amount">
+                  <span class="scheme-amount-label">{{ t('schemes.card.maxAmount') }}</span>
+                  <span class="scheme-amount-value">{{ formatAmount(s.maxAmount) }}</span>
+                </div>
+                <div class="scheme-meta">
+                  <span class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    {{ lang() === 'ta' ? s.processingTimeTa : s.processingTime }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="scheme-footer">
+                <div class="scheme-deadline">
+                  <mat-icon>event</mat-icon>
+                  <span>{{ t('schemes.card.deadline') }}: {{ formatDate(s.deadline) }}</span>
+                </div>
+                <a [routerLink]="['/schemes', s.slug]" class="scheme-cta">
+                  {{ t('schemes.card.viewDetails') }}
+                  <mat-icon>arrow_forward</mat-icon>
+                </a>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

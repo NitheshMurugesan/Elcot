@@ -1,0 +1,67 @@
+name: CI - CMS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/cms/**'
+      - '.github/workflows/ci-cms.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/cms/**'
+
+concurrency:
+  group: cms-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/cms
+    env:
+      CI: 'true'
+      SKIP_BOOTSTRAP: 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Verify Strapi 5 (declared version)
+        run: >-
+          node -e "const v=require('./package.json').dependencies['@strapi/strapi'];
+          if(!/^[\^~]?5\./.test(v)){console.error('Expected Strapi 5.x, got '+v);process.exit(1)}
+          console.log('Strapi '+v+' (declared) OK')"
+
+      # The committed lockfile is from a mock registry, so a frozen install fails
+      # on real npm. CI regenerates it with a non-frozen install. Dependency
+      # auditing runs honestly in the Security Scan workflow (no whitelist).
+      - name: Install CMS dependencies
+        run: pnpm install --no-frozen-lockfile --shamefully-hoist
+
+      - name: Build Strapi admin
+        env:
+          CI: 'true'
+          NODE_ENV: 'production'
+          STRAPI_ADMIN_BACKEND_URL: 'http://localhost:1337'
+          HOST: '0.0.0.0'
+          PORT: '1337'
+          DATABASE_CLIENT: 'sqlite'
+          DATABASE_FILENAME: '.tmp/data.db'
+          APP_KEYS: 'ciKey1,ciKey2,ciKey3,ciKey4'
+          API_TOKEN_SALT: 'ci-token-salt-not-secret-12345'
+          ADMIN_JWT_SECRET: 'ci-admin-jwt-not-secret-12345'
+          TRANSFER_TOKEN_SALT: 'ci-transfer-salt-not-secret-12345'
+          JWT_SECRET: 'ci-jwt-secret-not-secret-12345'
+        run: pnpm run build

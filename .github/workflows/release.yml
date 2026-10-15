@@ -1,0 +1,42 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v4
+      - name: Build (release artifact)
+        run: |
+          pnpm install --frozen-lockfile --shamefully-hoist
+          # -DskipTests here is intentional and is NOT because tests are broken:
+          # the test suite is already executed on every PR/push by ci-backend.yml.
+          # This release job only re-packages the JARs for the tagged artifact, so
+          # it skips re-running tests to keep release builds fast and deterministic.
+          # The authoritative test gate lives in ci-backend.yml (mvn verify).
+          mvn clean package -DskipTests -Pprod
+          pnpm run build:all
+      - name: Create Release Archive
+        run: |
+          tar -czf avgcxr-portal-${{ github.ref_name }}.tar.gz \
+            apps/api/target/api-1.0.0-SNAPSHOT.jar \
+            apps/worker/target/worker-1.0.0-SNAPSHOT.jar \
+            apps/public-portal/dist \
+            apps/applicant-portal/dist \
+            apps/admin-portal/dist \
+            apps/cms \
+            infra
+      - name: Upload Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: avgcxr-portal-*.tar.gz
