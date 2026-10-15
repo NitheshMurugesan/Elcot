@@ -59,7 +59,7 @@
     "ts-jest": "^29.2.5",
     "@types/jest": "^29.5.14",
     "playwright": "^1.46.0",
-    "@playwright/test": "^1.46.0",
+    "@playwright/test": "^1.64.0",
     "ng-packagr": "^19.2.0",
     "postcss": "^8.4.41",
     "postcss-import": "^16.1.0",
